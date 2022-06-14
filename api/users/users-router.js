@@ -80,7 +80,10 @@ router.post(
   validatePost,
   async (req, res, next) => {
     try {
-      throw new Error("argggh");
+      const result = await Post.insert({
+        user_id: req.params.id,
+        text: req.text,
+      });
     } catch (err) {
       next(err);
     }

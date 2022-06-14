@@ -1,4 +1,4 @@
-const USer = require("../users/users-model");
+const User = require("../users/users-model");
 
 function logger(req, res, next) {
   // DO YOUR MAGIC
