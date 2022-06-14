@@ -28,7 +28,7 @@ router.get("/:id", validateUserId, (req, res) => {
   res.json(req.user);
 });
 
-router.post("/", validateUser, (req, res) => {
+router.post("/", validateUser, (req, res, next) => {
   // RETURN THE NEWLY CREATED USER OBJECT
   // this needs a middleware to check that the request body is valid
   User.insert({ name: req.name })
@@ -38,7 +38,7 @@ router.post("/", validateUser, (req, res) => {
     .catch(next);
 });
 
-router.put("/:id", validateUserId, validateUser, (req, res) => {
+router.put("/:id", validateUserId, validateUser, (req, res, next) => {
   // RETURN THE FRESHLY UPDATED USER OBJECT
   // this needs a middleware to verify user id
   // and another middleware to check that the request body is valid
@@ -63,7 +63,7 @@ router.delete("/:id", validateUserId, async (req, res) => {
   }
 });
 
-router.get("/:id/posts", validateUserId, async (req, res) => {
+router.get("/:id/posts", validateUserId, async (req, res, next) => {
   // RETURN THE ARRAY OF USER POSTS
   // this needs a middleware to verify user id
   try {
@@ -84,6 +84,7 @@ router.post(
         user_id: req.params.id,
         text: req.text,
       });
+      res.status(201).json(result);
     } catch (err) {
       next(err);
     }
@@ -96,8 +97,8 @@ router.post(
 );
 
 router.use((err, req, res, next) => {
-  req.status(err.status || 500).json({
-    customMessage: "something bad inside posts router happened",
+  res.status(err.status || 500).json({
+    customMessage: "something tragic inside posts router happened",
     message: err.message,
     stack: err.stack,
   });
